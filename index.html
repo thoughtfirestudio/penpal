@@ -206,9 +206,10 @@ let composeBody = '';
 let composeBodyCount = 0;
 
 function show(s) {
-  ['login','top','inbox','compose','read'].forEach(id => {
-    const el = document.getElementById(id);
-    el.style.display = (id === s || (id === 'top' && s !== 'login')) ? '' : 'none';
+  document.getElementById('login').style.display = s === 'login' ? 'flex' : 'none';
+  document.getElementById('top').style.display = s === 'login' ? 'none' : 'flex';
+  ['inbox','compose','read'].forEach(id => {
+    document.getElementById(id).style.display = id === s ? 'flex' : 'none';
   });
 }
 

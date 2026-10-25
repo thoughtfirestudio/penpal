@@ -177,7 +177,14 @@ body {
 
 <script>
 // ---- config ----
-const FAMILY = ['Daddy', 'Mommy', 'Zepha', 'Ezra', 'Zion'];
+const FAMILY = [
+  { name: 'Daddy', emoji: '🎯' },
+  { name: 'Mommy', emoji: '✨' },
+  { name: 'Zepha', emoji: '🌙' },
+  { name: 'Ezra', emoji: '☀️' },
+  { name: 'Zion', emoji: '⭐' },
+];
+function getEmoji(n) { const f = FAMILY.find(x => x.name === n); return f ? f.emoji : ''; }
 const MSG_KEY = 'penpal.messages';
 const USER_KEY = 'penpal.current';
 
@@ -208,10 +215,10 @@ function show(s) {
 // ---- login ----
 function buildLogin() {
   const list = document.getElementById('user-list');
-  FAMILY.forEach(name => {
+  FAMILY.forEach(m => {
     const b = document.createElement('button');
-    b.textContent = name;
-    b.addEventListener('click', () => selectUser(name));
+    b.textContent = m.emoji + '  ' + m.name;
+    b.addEventListener('click', () => selectUser(m.name));
     list.appendChild(b);
   });
 }
@@ -237,7 +244,7 @@ function renderInbox() {
     const dot = document.createElement('span');
     dot.classList.add('dot', m.read ? 'read' : 'unread');
     const from = document.createElement('span');
-    from.classList.add('from'); from.textContent = m.from;
+    from.classList.add('from'); from.textContent = getEmoji(m.from) + '  ' + m.from;
     const subj = document.createElement('span');
     subj.classList.add('subj'); subj.textContent = m.subj || '(no subject)';
     const time = document.createElement('span');
@@ -252,9 +259,9 @@ function renderInbox() {
 function startCompose() {
   const sel = document.getElementById('compose-to');
   sel.innerHTML = '';
-  FAMILY.filter(n => n !== curUser).forEach(n => {
+  FAMILY.filter(m => m.name !== curUser).forEach(m => {
     const opt = document.createElement('option');
-    opt.value = n; opt.textContent = n;
+    opt.value = m.name; opt.textContent = m.emoji + '  ' + m.name;
     sel.appendChild(opt);
   });
   document.getElementById('compose-subj').value = '';
@@ -393,7 +400,7 @@ document.addEventListener('keydown', (e) => {
 // ---- init ----
 buildLogin();
 const saved = localStorage.getItem(USER_KEY);
-if (saved && FAMILY.includes(saved)) { selectUser(saved); }
+if (saved && FAMILY.some(m => m.name === saved)) { selectUser(saved); }
 else { show('login'); }
 
 // wire top back
